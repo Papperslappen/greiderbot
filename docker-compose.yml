@@ -1,0 +1,25 @@
+version: '2'
+services:
+  www:
+    build: www/
+    ports:
+    - "5000:5000"
+    volumes:
+    - ./www:/app
+    - wwwlog:/var/log
+    links:
+    - redis
+  bot:
+    build: bot/
+    volumes:
+      - ./bot:/app
+      - botlog:/var/log
+    links:
+    - redis
+  redis:
+    image: redis
+    volumes:
+      - ./db:/data
+volumes:
+  wwwlog: {}
+  botlog: {}
