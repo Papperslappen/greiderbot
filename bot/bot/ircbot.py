@@ -1,4 +1,5 @@
 import sys
+import irc.client
 import irc.bot
 import logging
 import bot.command as cmd
@@ -59,12 +60,19 @@ class IrcBot(irc.bot.SingleServerIRCBot):
         pass
 
     def postToChannel(self,message):
-        maxlength = 255 #this awaits a good unicode aware truncator
+        maxlength = 400 #this awaits a good unicode aware truncator
         if len(message) > maxlength:
-            log.info("Message too long. Length {}".format(len(message)))
+            log.info("Trying to send a too long message. Length {}".format(len(message)))
             message = message[0:maxlength]
+
+        #Remove carriage return and new line
+        message = message.replace("\r","")
+        message = message.replace("\n"," ")
+
         try:
             self.connection.privmsg(self.channelname,message)
+        except irc.client.InvalidCharacters as e:
+            log.error("Invalid characters in postToChannel. Error: {}".format(e))
         except:
             log.error("Error in postToChannel: {}".format(sys.exc_info()[0]))
             raise
