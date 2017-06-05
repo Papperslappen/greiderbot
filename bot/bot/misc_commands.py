@@ -5,11 +5,19 @@ import sys
 
 log = logging.getLogger("misc_commands")
 
-wikipedia.set_lang("sv")
-
-@cmd.command("fakta",timeout=30)
-def fakta(args):
+@cmd.command("fakta",timeout=10)
+def svFact(args):
     """Visa ett kul fakta om något"""
+    wikipedia.set_lang("sv")
+    return fact(args)
+
+@cmd.command("fact",timeout=10)
+def enFact(args):
+    """Visa ett kul fakta om något fast på engelska"""
+    wikipedia.set_lang("en")
+    return fact(args)
+
+def fact(args):
     if args == "":
         page = wikipedia.random()
     else:
