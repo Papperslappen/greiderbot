@@ -5,13 +5,13 @@ import sys
 
 log = logging.getLogger("misc_commands")
 
-@cmd.command("fakta",timeout=10)
+@cmd.command("fakta",timeout=10,attributes=["subonly"])
 def svFact(args):
     """Visa ett kul fakta om något"""
     wikipedia.set_lang("sv")
     return fact(args)
 
-@cmd.command("fact",timeout=10)
+@cmd.command("fact",timeout=10,attributes=["subonly"])
 def enFact(args):
     """Visa ett kul fakta om något fast på engelska"""
     wikipedia.set_lang("en")
