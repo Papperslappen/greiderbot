@@ -44,7 +44,7 @@ class IrcBot(irc.bot.SingleServerIRCBot):
     def on_pubmsg(self, c, e):
         message = e.arguments[0]
         if message.strip().startswith(self.prefix):
-            log.debug("Command incoming")
+            log.debug("Command incoming from user: {}".format(e.source.nick))
             cline = message.strip().split(" ")
             log.debug("cline: {}".format(cline))
             command_name = cline[0]
@@ -52,8 +52,12 @@ class IrcBot(irc.bot.SingleServerIRCBot):
             log.debug("c: {}".format(command_name))
             args = " ".join(cline[1:]) # args = "" if cline is the empty list
             log.debug("Finding command {} with args {}".format(command_name,args))
-            command_result = cmd.getCommand(command_name).do(args)
+            command = cmd.getCommand(command_name)
+
+            command_result = command.do(args)
+
             log.debug("CommandResult of type: {} with value: {}".format(command_result.type,command_result.value))
+
             if command_result.type == cmd.ResultType.TIMEOUT:
                 log.info("Command {} timed out".format(command_name))
             elif command_result.type == cmd.ResultType.EMPTY:
@@ -68,6 +72,9 @@ class IrcBot(irc.bot.SingleServerIRCBot):
 
     def do_command(self,e,cmd):
         pass
+
+    def whisperToUser(self,user,message):
+        self.postToChannel("/w {} {}".format(user,message))
 
     def postToChannel(self,message):
         maxlength = 450 #this awaits a good unicode aware truncator
