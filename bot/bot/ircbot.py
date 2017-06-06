@@ -5,6 +5,16 @@ import logging
 import bot.command as cmd
 
 log = logging.getLogger('ircbot')
+
+def utf8len(s):
+    return len(s.encode('utf-8'))
+
+def utf8truncate(s,length): #This is bad but maybe good enough
+    r = s[0:length]
+    while utf8len(r)>length:
+        r = r[0:-1]
+    return r
+
 class IrcBot(irc.bot.SingleServerIRCBot):
     def __init__(self, channelname, nickname, server, port=6667, password = "", prefix="!",welcome = ""):
         irc.bot.SingleServerIRCBot.__init__(
@@ -60,13 +70,13 @@ class IrcBot(irc.bot.SingleServerIRCBot):
         pass
 
     def postToChannel(self,message):
-        maxlength = 400 #this awaits a good unicode aware truncator
-        if len(message) > maxlength:
+        maxlength = 450 #this awaits a good unicode aware truncator
+        if utf8len(message) > maxlength:
             log.info("Trying to send a too long message. Length {}".format(len(message)))
-            message = message[0:maxlength]
+            message = utf8truncate(message,maxlength)
 
         #Remove carriage return and new line
-        message = message.replace("\r","")
+        message = message.replace("\r"," ")
         message = message.replace("\n"," ")
 
         try:
