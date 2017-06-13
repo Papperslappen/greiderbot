@@ -72,6 +72,11 @@ def registerCommand(name,func,timeout = 0,attributes = []):
     decorator = command("name",timeout,attributes)
     decorator(func)
 
+def alias(name,targetname):
+    log.debug("registering alias {} for {}",name,targetname)
+    target = getCommand(targetname)
+    _commands[name] = target
+
 def command(name,timeout = 0, attributes = []):
     name = name.lower()
     def decorator(func):

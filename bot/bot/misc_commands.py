@@ -17,6 +17,8 @@ def enFact(args):
     wikipedia.set_lang("en")
     return fact(args)
 
+cmd.alias("killgissa","fakta")
+
 def fact(args):
     if args == "":
         page = wikipedia.random()
