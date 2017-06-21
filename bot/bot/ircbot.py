@@ -3,7 +3,6 @@ import irc.client
 import irc.bot
 import logging
 import bot.command as cmd
-
 log = logging.getLogger('ircbot')
 
 def utf8len(s):
@@ -14,6 +13,15 @@ def utf8truncate(s,length): #This is bad but maybe good enough
     while utf8len(r)>length:
         r = r[0:-1]
     return r
+
+def process_tags(t):
+    tags = {}
+    for row in t:
+        k = row["key"]
+        v = row["value"]
+        tags[k] = v
+    return tags
+
 
 class IrcBot(irc.bot.SingleServerIRCBot):
     def __init__(self, channelname, nickname, server, port=6667, password = "", prefix="!",welcome = ""):
@@ -33,6 +41,10 @@ class IrcBot(irc.bot.SingleServerIRCBot):
         c.nick(c.get_nickname() + "_")
 
     def on_welcome(self, c, e):
+        c.cap("REQ", "twitch.tv/tags")
+        c.cap("REQ", "twitch.tv/membership")
+        c.cap("REQ", "twitch.tv/commands")
+
         log.info("Joining channel {}".format(self.channelname))
         c.join(self.channelname)
         if (self.welcome != "") :
@@ -41,8 +53,13 @@ class IrcBot(irc.bot.SingleServerIRCBot):
     def on_privmsg(self, c, e):
         pass
 
+
+
     def on_pubmsg(self, c, e):
         message = e.arguments[0]
+        tags = process_tags(e.tags)
+        log.debug("Tags: {}".format(tags))
+        log.debug("{}".format(tags))
         if message.strip().startswith(self.prefix):
             log.debug("Command incoming from user: {}".format(e.source.nick))
             cline = message.strip().split(" ")
@@ -78,13 +95,13 @@ class IrcBot(irc.bot.SingleServerIRCBot):
 
     def postToChannel(self,message):
         maxlength = 450 #this awaits a good unicode aware truncator
-        if utf8len(message) > maxlength:
-            log.info("Trying to send a too long message. Length {}".format(len(message)))
-            message = utf8truncate(message,maxlength)
-
         #Remove carriage return and new line
         message = message.replace("\r"," ")
         message = message.replace("\n"," ")
+
+        if utf8len(message) > maxlength:
+            log.info("Trying to send a too long message. Length {}".format(len(message)))
+            message = utf8truncate(message,maxlength)
 
         try:
             self.connection.privmsg(self.channelname,message)

@@ -10,8 +10,8 @@ import bot.misc_commands
 log = logging.getLogger("main")
 logging.basicConfig(level = logging.DEBUG)
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal.default_int_handler)
 
     cfg = config.readConfigFile()

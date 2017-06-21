@@ -1,3 +1,5 @@
 redis
 irc
 wikipedia
+aiohttp
+aioredis
