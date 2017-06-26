@@ -20,6 +20,8 @@ def process_tags(t):
         k = row["key"]
         v = row["value"]
         tags[k] = v
+    badges = tags["badges"].split(',')
+    tags["badges"] = badges
     return tags
 
 
@@ -53,28 +55,20 @@ class IrcBot(irc.bot.SingleServerIRCBot):
     def on_privmsg(self, c, e):
         pass
 
-
-
     def on_pubmsg(self, c, e):
         message = e.arguments[0]
         tags = process_tags(e.tags)
         log.debug("Tags: {}".format(tags))
-        log.debug("{}".format(tags))
         if message.strip().startswith(self.prefix):
             log.debug("Command incoming from user: {}".format(e.source.nick))
             cline = message.strip().split(" ")
-            log.debug("cline: {}".format(cline))
             command_name = cline[0]
             command_name = command_name[len(self.prefix):].lower()
-            log.debug("c: {}".format(command_name))
             args = " ".join(cline[1:]) # args = "" if cline is the empty list
             log.debug("Finding command {} with args {}".format(command_name,args))
             command = cmd.getCommand(command_name)
-
             command_result = command.do(args)
-
             log.debug("CommandResult of type: {} with value: {}".format(command_result.type,command_result.value))
-
             if command_result.type == cmd.ResultType.TIMEOUT:
                 log.info("Command {} timed out".format(command_name))
             elif command_result.type == cmd.ResultType.EMPTY:
