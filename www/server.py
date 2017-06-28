@@ -4,7 +4,6 @@ from redis import Redis
 app = Flask(__name__)
 redis = Redis(host='redis', port=6379)
 
-
 @app.route('/css/<path:path>')
 def static_css(path):
     return send_from_directory('css',path)
@@ -17,10 +16,13 @@ def static_js(path):
 def static_img(path):
     return send_from_directory('img',path)
 
-
 @app.route('/')
 def main():
-    return render_template("page.html",hello = "hello world")
+    return render_template("page.html")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+@app.route('/overlay/kyckling')
+def kycklingcounter_overlay(style):
+    count = 5
+
+def start_server(debug = False):
+    app.run(host="0.0.0.0", debug = debug)
