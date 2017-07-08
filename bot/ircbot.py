@@ -4,6 +4,7 @@ import irc.bot
 import logging
 import bot.command as cmd
 log = logging.getLogger('ircbot')
+import bot.counter
 
 def utf8len(s):
     return len(s.encode('utf-8'))

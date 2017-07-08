@@ -1,6 +1,8 @@
 from flask import Flask, send_from_directory, render_template
 from redis import Redis
 
+import www.counter
+
 app = Flask(__name__)
 redis = Redis(host='redis', port=6379)
 
@@ -20,9 +22,13 @@ def static_img(path):
 def main():
     return render_template("page.html")
 
-@app.route('/overlay/kyckling')
-def kycklingcounter_overlay(style):
-    count = 5
+@app.errorhandler(404)
+def fourzerofour(e):
+    return render_template("404.html",quote="När jag var sexton drömde jag om \
+    världsrevolutionen. Nu är jag fyrtio - och planerar för den.")
+
+app.register_blueprint(www.counter.bp)
+#url_prefix='/counter/'
 
 def start_server(debug = False):
     app.run(host="0.0.0.0", debug = debug)
