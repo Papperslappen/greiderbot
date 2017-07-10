@@ -22,6 +22,7 @@ def getCount(name):
 def test():
     return "TEST"
 
+
 @bp.route('/api/<name>/')
 def counter_data(name):
     log.info("Get counter: {}".format(name))
@@ -30,6 +31,7 @@ def counter_data(name):
         return abort(404)
     else:
         return json.dumps({"name":name,"value":counter})
+
 
 @bp.route('/overlay/<name>/')
 def counter_overlay(name):
