@@ -19,6 +19,11 @@ def enFact(args):
 
 cmd.alias("killgissa","fakta")
 
+@cmd.command("äsch",timeout=10,attributes=[])
+def asch(args):
+    return "äsch"
+
+
 def fact(args):
     if args == "":
         page = wikipedia.random()
@@ -35,3 +40,9 @@ def fact(args):
         log.warn("Other wikipedia error: {}".format(sys.exc_info()[0]))
     finally:
         return fact
+
+
+@cmd.command("discord",timeout=10)
+def discord(args):
+    """Länka till discord"""
+    return "https://discord.gg/zhEnSX9"
