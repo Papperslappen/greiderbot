@@ -1,5 +1,8 @@
 redis
 irc
 wikipedia
+
+aiodns
+cchardet
 aiohttp
 aioredis

@@ -1,19 +1,21 @@
-version: '2'
+version: '3'
 services:
   www:
-    build: www/
+    build:
+      context: .
+      dockerfile: Dockerfile_www
     ports:
     - "5000:5000"
     volumes:
-    - ./www:/app
-    - wwwlog:/var/log
+    - .:/app
     links:
     - redis
   bot:
-    build: bot/
+    build:
+      context: .
+      dockerfile: Dockerfile_bot
     volumes:
-      - ./bot:/app
-      - botlog:/var/log
+      - .:/app
     links:
     - redis
   redis:

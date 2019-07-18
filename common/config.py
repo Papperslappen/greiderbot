@@ -29,7 +29,6 @@ def genConfigFile():
 
 def readConfigFile():
     cfg = configparser.ConfigParser()
-
     if os.path.isfile(CONFIG_FILENAME):
         cfg.read(CONFIG_FILENAME)
         logging.info("Successfully read {}".format(CONFIG_FILENAME))
